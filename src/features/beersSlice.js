@@ -21,6 +21,11 @@ const getBeer = createAsyncThunk("beers/getBeers", async (props, thunkAPI) => {
   }
 });
 
+const resetInfoRequest = (state) => {
+  state.isPending = false;
+  state.isRequestID = null;
+};
+
 const beerSlice = createSlice({
   name: "beer",
   initialState: defaultValue,
@@ -33,13 +38,12 @@ const beerSlice = createSlice({
         state.requestID = action.meta.requestId;
       })
       .addCase(getBeer.rejected, (state, { error }) => {
-        state.isPending = false;
-        state.requestID = null;
+        resetInfoRequest(state);
+
         console.error(error);
       })
       .addCase(getBeer.fulfilled, (state, { payload }) => {
-        state.isPending = false;
-        state.requestID = null;
+        resetInfoRequest(state);
         if (!payload) return;
 
         const { data } = payload;
